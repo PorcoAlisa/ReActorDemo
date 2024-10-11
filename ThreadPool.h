@@ -6,16 +6,22 @@
 #include <mutex>
 #include <queue>
 #include <condition_variable>
+#include <iostream>
 
 using namespace std;
 
 class ThreadPool
 {
-public:
+private:
     vector<thread> threads_;
     queue<function<void()>> taskqueue_;
     mutex mutex_;
     condition_variable cond_;
-    ThreadPool(size_t threadNum);
     atomic_bool stop_;
+public:
+    ThreadPool(size_t threadNum);
+    ~ThreadPool();
+    void Stop();
+    void AddTask(function<void()> fn);
+    size_t Size();
 };
