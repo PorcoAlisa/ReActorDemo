@@ -1,0 +1,1 @@
+g++ -o demo Server.cpp Socket.cpp ThreadPool.cpp InetAddress.cpp -pthread
