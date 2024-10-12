@@ -12,6 +12,8 @@
 
 using namespace std;
 
+int CreateNonBlocking();
+
 class Socket
 {
 private:
@@ -23,8 +25,9 @@ public:
     Socket(int fd);
     ~Socket();
     void Bind(const InetAddress &servaddr);
-    void Listen(int n); /* n代表队列长度 */
+    void Listen(int n = 128); /* n代表队列长度 */
     int Accept(InetAddress &clientAddr);
     /* TODO: 搞清楚每个选项的作用 */
     void SetSockOpt(bool noDelaySw, bool reUseAddrSw, bool reUsePortSw, bool keepAliveSw);
+    int Fd() const;
 };

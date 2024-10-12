@@ -1,6 +1,6 @@
 #include "Socket.h"
 
-int CreateNonBolcking()
+int CreateNonBlocking()
 {
     /* TODO: 研究阻塞与非阻塞socket的区别 */
     int listenFd = socket(AF_INET, SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_TCP);
@@ -69,4 +69,9 @@ void Socket::SetSockOpt(bool noDelaySw, bool reUseAddrSw, bool reUsePortSw, bool
 
     optVal = keepAliveSw ? 1 : 0;
     ::setsockopt(fd_, SOL_SOCKET, SO_KEEPALIVE, &optVal, size);
+}
+
+int Socket::Fd() const
+{
+    return fd_;
 }
