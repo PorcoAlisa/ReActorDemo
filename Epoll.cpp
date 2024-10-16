@@ -9,6 +9,11 @@ Epoll::Epoll()
     }
 }
 
+Epoll::~Epoll()
+{
+    close(epollFd_);
+}
+
 void Epoll::UpdateChannel(Channel *ch)
 {
     epoll_event ev;

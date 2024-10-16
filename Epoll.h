@@ -5,6 +5,7 @@
 #include <vector>
 #include <strings.h>
 #include <errno.h>
+#include <unistd.h>
 #include "Channel.h"
 using namespace std;
 
