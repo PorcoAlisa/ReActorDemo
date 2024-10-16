@@ -3,4 +3,6 @@ server.cpp \
 Socket.cpp \
 ThreadPool.cpp \
 Acceptor.cpp \
+Channel.cpp \
+Epoll.cpp \
 InetAddress.cpp -pthread
