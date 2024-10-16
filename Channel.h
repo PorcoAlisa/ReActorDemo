@@ -22,7 +22,7 @@ public:
     uint32_t Events();
     int Fd();
     void SetInEpoll(bool inEpoll);
-    void HandEvents();
+    void HandleEvents();
     void SetHappenedEvents(uint32_t happenedEvents);
     void SetCloseCallBack(function<void()> fn);
     void SetReadCallBack(function<void()> fn);

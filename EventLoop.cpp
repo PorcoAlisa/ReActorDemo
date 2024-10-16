@@ -34,7 +34,7 @@ void EventLoop::RunLoop()
                 /* 每个Channel有事件发生，必须交由每个channel自己来处理，需要给channel类添加处理事件的函数 */
                 /* 但是channel也是底层类，channel不关心业务到底怎么处理事件，它也不知道怎么处理事件
                 它依然是采用回调函数的方法，只是提供一个接口给业务注册，然后提供一个调用业务注册函数来执行的底层框架，将业务和底层框架剥离开来 */
-                ch->HandEvents();
+                ch->HandleEvents();
             }
         }
     }

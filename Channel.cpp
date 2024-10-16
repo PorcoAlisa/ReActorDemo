@@ -37,16 +37,32 @@ void Channel::SetHappenedEvents(uint32_t happenedEvents)
 
 /* 函数名叫handelevents，那handle什么events呢，handle epollwait的时候，监测到发生
 并通过SetHappenedEvents写入happenedEvents_的事件 */
-void Channel::HandEvents()
+void Channel::HandleEvents()
 {
     if (happenedEvents_ & EPOLLRDHUP) { /* 说明客户端已关闭连接 */
-        closeCallBack_();
+        if(closeCallBack_ != NULL) {
+            closeCallBack_();
+        } else {
+            printf("Channel::HandleEvents() error closeCallBack_ NULL\n");
+        }
     } else if (happenedEvents_ & (EPOLLIN|EPOLLPRI)) { /* 接收缓冲区中有数据可以读 */
-        readCallBack_();
+        if (readCallBack_ != NULL) {
+            readCallBack_();
+        } else {
+            printf("Channel::HandleEvents() error readCallBack_ NULL\n");
+        }
     } else if (happenedEvents_ & EPOLLOUT) { /* 有数据需要写 */
-        writeCallBack_();
+        if (writeCallBack_ != NULL) {
+            writeCallBack_();
+        } else {
+            printf("Channel::HandleEvents() error writeCallBack_ NULL\n");
+        }
     } else {
-        errorCallBack_();
+        if (errorCallBack_ != NULL) {
+            errorCallBack_();
+        } else {
+            printf("Channel::HandleEvents() error errorCallBack_ NULL\n");
+        }
     }
 }
 
