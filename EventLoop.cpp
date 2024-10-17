@@ -1,4 +1,5 @@
 #include "EventLoop.h"
+#include "Connection.h"
 
 EventLoop::EventLoop(int timeout):epoll_(new Epoll), stop_(false), timeout_(timeout)
 {
@@ -53,4 +54,15 @@ void EventLoop::SetTimeOutCallBackFunc(function<void(EventLoop *)> fn)
 void EventLoop::UpdateChannel(Channel *ch)
 {
     epoll_->UpdateChannel(ch);
+}
+
+void EventLoop::RemoveChannel(Channel *ch)
+{
+    epoll_->RemoveChannel(ch);
+}
+
+void EventLoop::AddConnToConns(shared_ptr<Connection>& conn)
+{
+    lock_guard<mutex> lg(mutex_);
+    conns_[conn->Fd()] = conn;
 }

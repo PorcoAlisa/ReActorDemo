@@ -20,8 +20,6 @@ private:
 public:
     Connection(EventLoop *loop, unique_ptr<Socket> clientSock);
     ~Connection();
+    void HandleReadEvent();
+    int Fd() const;
 };
-
-Connection::~Connection()
-{
-}
