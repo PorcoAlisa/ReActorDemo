@@ -6,4 +6,5 @@ Acceptor.cpp \
 Channel.cpp \
 Epoll.cpp \
 EventLoop.cpp \
+TcpServer.cpp \
 InetAddress.cpp -pthread
