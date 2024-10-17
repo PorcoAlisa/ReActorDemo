@@ -7,4 +7,5 @@ Channel.cpp \
 Epoll.cpp \
 EventLoop.cpp \
 TcpServer.cpp \
+Connection.cpp \
 InetAddress.cpp -pthread

@@ -4,9 +4,12 @@
 #include <sys/epoll.h>
 using namespace std;
 
+class EventLoop;
+
 class Channel
 {
 private:
+    EventLoop *loop_;
     int fd_;
     uint32_t events_ = 0; /* 在添加到epoll模型监视的时候，需要知道监视什么events */
     uint32_t happenedEvents_ = 0; /* epoll模型监测到事件发生后，记录发生了什么事件 */
@@ -18,7 +21,7 @@ private:
     function<void()> writeCallBack_;
     function<void()> errorCallBack_;
 public:
-    Channel(int fd);
+    Channel(EventLoop *loop, int fd);
     ~Channel();
     bool InEpoll();
     uint32_t Events();
@@ -30,4 +33,5 @@ public:
     void SetReadCallBack(function<void()> fn);
     void SetWriteCallBack(function<void()> fn);
     void SetErrorCallBack(function<void()> fn);
+    void EnableReading();
 };

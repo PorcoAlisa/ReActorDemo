@@ -1,6 +1,7 @@
 #include "Channel.h"
+#include "EventLoop.h"
 
-Channel::Channel(int fd):fd_(fd)
+Channel::Channel(EventLoop *loop, int fd):loop_(loop), fd_(fd)
 {
 
 }
@@ -84,4 +85,11 @@ void Channel::SetWriteCallBack(function<void()> fn)
 void Channel::SetErrorCallBack(function<void()> fn)
 {
     errorCallBack_ = fn;
+}
+
+void Channel::EnableReading()
+{
+    events_ |= EPOLLET;
+    /* 需要在loop_中更新channel */
+    loop_->UpdateChannel(this);
 }

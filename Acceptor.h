@@ -17,6 +17,7 @@ epoll会进行事件循环，然后把有事件发生的channel返回，然后�
 class Acceptor
 {
 private:
+    EventLoop *loop_; /* 暂时先用普通指针 */
     Socket servSock_;   /* Acceptor在ReActor模型中只有一个，使用栈内存 */
     Channel acceptChannel_;    /* Acceptor在ReActor模型中只有一个，同理使用栈内存 */
 
@@ -24,7 +25,6 @@ private:
 那就是在Acceptor中存一个指针，指向它属于的事件循环
 它只是被添加到某个事件循环中，它不对事件循环进行管理，所以它不能为时间循环申请内存、释放内存等
 只能用一个指针标记一下，Acceptor属于哪个事件循环，仅此而已 */
-    EventLoop *loop_; /* 暂时先用普通指针 */
     function<void(unique_ptr<Socket>)> newConnCallBack_;
 public:
     Acceptor(const string &ip, const uint16_t port, EventLoop *loop);

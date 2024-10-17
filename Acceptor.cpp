@@ -1,7 +1,7 @@
 #include "Acceptor.h"
 
 Acceptor::Acceptor(const string &ip, const uint16_t port, EventLoop *loop)
-    :servSock_(CreateNonBlocking()), acceptChannel_(servSock_.Fd()), loop_(loop)
+    :servSock_(CreateNonBlocking()), loop_(loop), acceptChannel_(loop_, servSock_.Fd())
 {
     InetAddress servAddr(ip, port);
     servSock_.SetSockOpt(true, true, true, true);
@@ -12,8 +12,8 @@ Acceptor::Acceptor(const string &ip, const uint16_t port, EventLoop *loop)
 
 /* 现在引入了acceptChannel的概念，那么初始化channel，就需要指定回调函数，除非发生事件后，你希望channel什么也不做 */
 /* Acceptor的channel只处理新客户端连接的读事件，对其他事件不关心，所以指定读事件处理函数 */
-
-
+    acceptChannel_.SetReadCallBack(bind(&Acceptor::AcceptNewConn, this));
+    acceptChannel_.EnableReading();
 }
 
 Acceptor::~Acceptor()

@@ -1,6 +1,6 @@
 #include "EventLoop.h"
 
-EventLoop::EventLoop(int timeout):epoll_(), stop_(false), timeout_(timeout)
+EventLoop::EventLoop(int timeout):epoll_(new Epoll), stop_(false), timeout_(timeout)
 {
 
 }
@@ -18,7 +18,7 @@ void EventLoop::RunLoop()
     所以stop实际上是由主线程来执行的，而时间循环线程与主线程不一定是同一个线程，这里为了安全，采用原子类型变量 */
     while (!stop_) {
         vector<Channel *> channels;
-        channels = epoll_.EpollWait(timeout_); /* TODO: 这里会发生拷贝，后续考虑优化 */
+        channels = epoll_->EpollWait(timeout_); /* TODO: 这里会发生拷贝，后续考虑优化 */
         if (channels.size() == 0) {
             /* size为0说明超时 */
             /* 那么接下来应该执行超时的处理，但是超时的处理不能放在eventloop里面
@@ -48,4 +48,9 @@ void EventLoop::StopLoop()
 void EventLoop::SetTimeOutCallBackFunc(function<void(EventLoop *)> fn)
 {
     TimeOutCallBack_ = fn;
+}
+
+void EventLoop::UpdateChannel(Channel *ch)
+{
+    epoll_->UpdateChannel(ch);
 }
