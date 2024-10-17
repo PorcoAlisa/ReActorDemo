@@ -30,8 +30,7 @@ void Socket::Bind(const InetAddress &servaddr)
         return;
     }
 
-    ip_ = servaddr.Ip(); /* TODO: const char *和string之间的关系 */
-    port_ = servaddr.Port();
+    SetIpPort(servaddr.Ip(), servaddr.Port());
 }
 
 void Socket::Listen(int n)
@@ -74,4 +73,10 @@ void Socket::SetSockOpt(bool noDelaySw, bool reUseAddrSw, bool reUsePortSw, bool
 int Socket::Fd() const
 {
     return fd_;
+}
+
+void Socket::SetIpPort(const string& ip, uint16_t port)
+{
+    ip_ = ip; /* TODO: const char *和string之间的关系 */
+    port_ = port;
 }

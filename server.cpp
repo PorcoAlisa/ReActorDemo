@@ -11,8 +11,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    Acceptor acceptor(argv[1], atoi(argv[2]));
-    InetAddress clientAddr;
-    acceptor.Accept(clientAddr);
-    
+    // Acceptor acceptor(argv[1], atoi(argv[2]));
+    // InetAddress clientAddr;
+    // acceptor.Accept(clientAddr);
 }
