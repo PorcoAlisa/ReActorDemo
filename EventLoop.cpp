@@ -25,7 +25,7 @@ void EventLoop::RunLoop()
             超时怎么处理是业务关心的事情，eventloop虽然在epoll类的上层，但仍然属于底层类，提供事件循环，并执行相应处理的框架
             业务可能随时变动，但是底层类和框架不能随时变动，所以这里需要采用回调函数的形式 */
             if (TimeOutCallBack_ != NULL) {
-                TimeOutCallBack_(this);
+                TimeOutCallBack_(this); /* this指针传出去，告诉外层，哪个事件循环超时了 */
             }
         } else {
             /* 说明有事件发生 */
@@ -38,6 +38,11 @@ void EventLoop::RunLoop()
             }
         }
     }
+}
+
+void EventLoop::StopLoop()
+{
+    stop_ = true;
 }
 
 void EventLoop::SetTimeOutCallBackFunc(function<void(EventLoop *)> fn)

@@ -21,5 +21,6 @@ public:
     EventLoop(int timeout = 80);
     ~EventLoop();
     void RunLoop();
+    void StopLoop();
     void SetTimeOutCallBackFunc(function<void(EventLoop *)> fn);
 };
