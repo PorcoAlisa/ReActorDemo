@@ -33,4 +33,9 @@ public:
     void RunEventLoop();
     void StopEventLoop();
     void SetNewConnCallBackInTcpServer(function<void(shared_ptr<Connection>)> fn);
+
+    void HandleCloseInTcpServer(Connection *conn);
+    void HandleErrorInTcpServer(Connection *conn);
+    void HandleReadInTcpServer(Connection *conn, string &message);
+    void HandleSendFinishInTcpServer(Connection *conn);
 };

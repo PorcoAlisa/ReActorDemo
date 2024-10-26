@@ -44,6 +44,7 @@ void EventLoop::RunLoop()
 void EventLoop::StopLoop()
 {
     stop_ = true;
+    /* 这里还没完成，stop_设置为true之后，RunLoop里面很可能还卡在epoll_wait这一步，所以需要有个东西把eventloop从epollwait中唤醒 */
 }
 
 void EventLoop::SetTimeOutCallBackFunc(function<void(EventLoop *)> fn)

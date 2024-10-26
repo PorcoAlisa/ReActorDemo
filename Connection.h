@@ -19,7 +19,7 @@ private:
     unique_ptr<Channel> clientChannel_;
     string buf_; /* readBuf_，后续改名*/
     string sendBuf_; /* 发送缓存*/
-    function<void(Connection *, string &)> newConnCallBackInConn_; /* 这些地方先暂时用普通指针 */
+    function<void(Connection *, string &)> readCallBackInConn_; /* 这些地方先暂时用普通指针 */
     function<void(Connection *)> closeCallBackInConn_;
     function<void(Connection *)> errorCallBackInconn_;
     function<void(Connection *)> sendFinishCallBackInConn_;
@@ -34,7 +34,7 @@ public:
     void HandleErrorEvent();
     void HandleWriteEvent();
 
-    void SetNewConnCallBackInConn(function<void(Connection *, string &)> fn);
+    void SetReadCallBackInConn(function<void(Connection *, string &)> fn);
     void SetCloseCallBackInConn(function<void(Connection *)> fn);
     void SetErrorCallBackInConn(function<void(Connection *)> fn);
     void SetSendFinishCallBackInConn(function<void(Connection *)> fn);
