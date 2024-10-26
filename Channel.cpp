@@ -48,6 +48,7 @@ void Channel::HandleEvents()
         }
     } else if (happenedEvents_ & (EPOLLIN|EPOLLPRI)) { /* 接收缓冲区中有数据可以读 */
         if (readCallBack_ != NULL) {
+            printf("readEvent happened\n");
             readCallBack_();
         } else {
             printf("Channel::HandleEvents() error readCallBack_ NULL\n");
@@ -89,7 +90,7 @@ void Channel::SetErrorCallBack(function<void()> fn)
 
 void Channel::EnableReading()
 {
-    events_ |= EPOLLET;
+    events_ |= EPOLLIN;
     /* 需要在loop_中更新channel */
     loop_->UpdateChannel(this);
 }

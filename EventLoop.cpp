@@ -17,6 +17,7 @@ void EventLoop::RunLoop()
     /* 思考stop需不需用原子类型，首先stop_需要被多个线程操作
     stop操作是通过信号来完成非异常状态下的退出的
     所以stop实际上是由主线程来执行的，而时间循环线程与主线程不一定是同一个线程，这里为了安全，采用原子类型变量 */
+    printf("eventLoop start Run\n");
     while (!stop_) {
         vector<Channel *> channels;
         channels = epoll_->EpollWait(timeout_); /* TODO: 这里会发生拷贝，后续考虑优化 */

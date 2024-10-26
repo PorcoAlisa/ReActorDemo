@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 10; i++) {
         memset(buf, 0, sizeof(buf));
         sprintf(buf, "这是第%d条消息", i);
+        printf("这是第%d条消息\n", i);
 
         char tmpBuf[1024];
         memset(tmpBuf, 0, sizeof(tmpBuf));
@@ -53,6 +54,7 @@ int main(int argc, char *argv[])
         recv(clientFd, &len, 4, 0);
         memset(buf, 0, sizeof(buf));
         recv(clientFd, buf, len, 0);
+        printf("%s\n", buf);
     }
 
     printf("结束时间：%d\n", time(0));
