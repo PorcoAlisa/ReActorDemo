@@ -38,4 +38,6 @@ public:
     void SetCloseCallBackInConn(function<void(Connection *)> fn);
     void SetErrorCallBackInConn(function<void(Connection *)> fn);
     void SetSendFinishCallBackInConn(function<void(Connection *)> fn);
+
+    void SendInConn(const char *data, size_t size);
 };

@@ -34,6 +34,7 @@ public:
     void SetWriteCallBack(function<void()> fn);
     void SetErrorCallBack(function<void()> fn);
     void EnableReading();
+    void EnableWriting();
     void DisableWriting();
     void RemoveFromEpoll();
     void UseEt(); /* 设置边缘触发模式 */

@@ -113,3 +113,13 @@ void Connection::SetSendFinishCallBackInConn(function<void(Connection *)> fn)
 {
     sendFinishCallBackInConn_ = fn;
 }
+
+void Connection::SendInConn(const char *data, size_t size)
+{
+    /* 这里判断客户端是否已断开连接？ */
+    
+    /* 这里应该不能把sendBuf_清空，可能sendBuf_还有之前没发送完成的数据残留 */
+    sendBuf_.append((char *)&size, 4);
+    sendBuf_.append(data, size);
+    clientChannel_->EnableWriting();
+}

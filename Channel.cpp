@@ -94,6 +94,12 @@ void Channel::EnableReading()
     loop_->UpdateChannel(this);
 }
 
+void Channel::EnableWriting()
+{
+    events_ |= EPOLLOUT;
+    loop_->UpdateChannel(this);
+}
+
 void Channel::RemoveFromEpoll()
 {
     loop_->RemoveChannel(this);
