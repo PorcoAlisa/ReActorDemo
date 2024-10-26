@@ -57,9 +57,11 @@ void TcpServer::StopEventLoop()
 {
     mainLoop_.StopLoop();
 
-    for (uint32_t i = 0; i < threadNum_; i++) {
+    for (uint32_t i = 0; i < threadNum_; i++) { /* 构造的时候，从事件循环就已经运行在线程池中了 */
         subLoops_[i]->StopLoop();
     }
+
+    threadPool_.Stop(); /* threadPoll_在构造时，就已经开始运行 */
 }
 
 void TcpServer::SetNewConnCallBackInTcpServer(function<void(shared_ptr<Connection>)> fn)
