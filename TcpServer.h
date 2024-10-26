@@ -23,6 +23,12 @@ private:
     map<int, shared_ptr<Connection>> conns_; /* 先暂时用unique_ptr，等后面看看到底什么原因，必须换成shared_ptr */
     mutex mutex_;
     function<void(shared_ptr<Connection>)> newConnCallBackInTcpServer_;
+
+    function<void(Connection *, string &)> readCallBackInTcpServer_;
+    function<void(Connection *)> errorCallBackInTcpServer_;
+    function<void(Connection *)> closeCallBackInTcpServer_;
+    function<void(Connection *)> sendFinishCallBackInTcpServer_;
+
 /* 现在在acceptor类里面，已经完成了accept，并且创建了新的socket，利用新的socket创建了新的Socket，
 使用的是unique_ptr，并且通过已经传入内部的回调函数，等待外部设定回调函数 */
 public:
@@ -38,4 +44,10 @@ public:
     void HandleErrorInTcpServer(Connection *conn);
     void HandleReadInTcpServer(Connection *conn, string &message);
     void HandleSendFinishInTcpServer(Connection *conn);
+
+    void SetReadCallBackInTcpServer(function<void(Connection *, string &)> fn);
+    void SetErrorCallBackInTcpServer(function<void(Connection *)> fn);
+    void SetCloseCallBackInTcpServer(function<void(Connection *)> fn);
+    void SetSendFinishCallBackInTcpServer(function<void(Connection *)> fn);
+
 };

@@ -64,30 +64,63 @@ void TcpServer::StopEventLoop()
     threadPool_.Stop(); /* threadPoll_在构造时，就已经开始运行 */
 }
 
+void TcpServer::HandleCloseInTcpServer(Connection *conn)
+{
+    if (closeCallBackInTcpServer_ != nullptr) {
+        closeCallBackInTcpServer_(conn);
+    }
+    {
+        lock_guard<mutex> lg(mutex_);
+        conns_.erase(conn->Fd());
+    }
+}
+
+void TcpServer::HandleErrorInTcpServer(Connection *conn)
+{
+    if (errorCallBackInTcpServer_ != nullptr) {
+        errorCallBackInTcpServer_(conn);
+    }
+    {
+        lock_guard<mutex> lg(mutex_);
+        conns_.erase(conn->Fd());
+    }
+}
+
+void TcpServer::HandleReadInTcpServer(Connection *conn, string &message)
+{
+    if (readCallBackInTcpServer_ != nullptr) {
+        readCallBackInTcpServer_(conn, message);
+    }
+}
+
+void TcpServer::HandleSendFinishInTcpServer(Connection *conn)
+{
+    if (sendFinishCallBackInTcpServer_ != nullptr) {
+        sendFinishCallBackInTcpServer_(conn);
+    }
+}
+
 void TcpServer::SetNewConnCallBackInTcpServer(function<void(shared_ptr<Connection>)> fn)
 {
     newConnCallBackInTcpServer_ = fn;
 }
 
-void TcpServer::HandleCloseInTcpServer(Connection *conn)
+void TcpServer::SetReadCallBackInTcpServer(function<void(Connection *, string &)> fn)
 {
-    {
-        lock_guard<mutex> lg(mutex_);
-        conns_.erase(conn->Fd());
-    }
+    readCallBackInTcpServer_ = fn;
 }
-void TcpServer::HandleErrorInTcpServer(Connection *conn)
-{
-    {
-        lock_guard<mutex> lg(mutex_);
-        conns_.erase(conn->Fd());
-    }
-}
-void TcpServer::HandleReadInTcpServer(Connection *conn, string &message)
-{
 
-}
-void TcpServer::HandleSendFinishInTcpServer(Connection *conn)
+void TcpServer::SetErrorCallBackInTcpServer(function<void(Connection *)> fn)
 {
+    errorCallBackInTcpServer_ = fn;
+}
 
+void TcpServer::SetCloseCallBackInTcpServer(function<void(Connection *)> fn)
+{
+    closeCallBackInTcpServer_ = fn;
+}
+
+void TcpServer::SetSendFinishCallBackInTcpServer(function<void(Connection *)> fn)
+{
+    sendFinishCallBackInTcpServer_ = fn;
 }
