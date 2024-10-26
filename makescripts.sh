@@ -8,4 +8,5 @@ Epoll.cpp \
 EventLoop.cpp \
 TcpServer.cpp \
 Connection.cpp \
+EchoServer.cpp \
 InetAddress.cpp -pthread

@@ -1,7 +1,14 @@
 #include <iostream>
-#include "ThreadPool.h"
+#include "EchoServer.h"
 
-#include "Acceptor.h"
+EchoServer *echoServer;
+
+void Stop(int sig)
+{
+    echoServer->Stop();
+    delete echoServer;
+    exit(0);
+}
 
 int main(int argc, char *argv[])
 {
@@ -11,7 +18,8 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // Acceptor acceptor(argv[1], atoi(argv[2]));
-    // InetAddress clientAddr;
-    // acceptor.Accept(clientAddr);
+    echoServer = new EchoServer(argv[1], atoi(argv[2]));
+    echoServer->Start();
+
+    return 0;
 }
