@@ -103,3 +103,9 @@ void Channel::UseEt()
 {
     events_ = events_|EPOLLET; /* 设置使用边缘触发模式 */
 }
+
+void Channel::DisableWriting()
+{
+    events_ &= ~EPOLLOUT;
+    loop_->UpdateChannel(this);
+}

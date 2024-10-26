@@ -17,7 +17,8 @@ private:
     EventLoop* loop_;
     unique_ptr<Socket> clientSock_;
     unique_ptr<Channel> clientChannel_;
-    string buf_;
+    string buf_; /* readBuf_，后续改名*/
+    string sendBuf_; /* 发送缓存*/
     function<void(Connection *, string &)> newConnCallBackInConn_; /* 这些地方先暂时用普通指针 */
     function<void(Connection *)> closeCallBackInConn_;
     function<void(Connection *)> errorCallBackInconn_;

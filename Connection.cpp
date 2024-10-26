@@ -44,7 +44,9 @@ void Connection::HandleReadEvent()
                 message = buf_.substr(4, len);
                 buf_.erase(0, len + 4);
 
-                newConnCallBackInConn_(this, message);
+                if (newConnCallBackInConn_ != nullptr) {
+                    newConnCallBackInConn_(this, message);
+                }
             }
             break;
         } else if (nread == 0) { /* 客户端连接已断开 */
@@ -65,18 +67,31 @@ void Connection::HandleCloseEvent()
 {
     /* 客户端关闭，要从事件循环中移除channel */
     clientChannel_->RemoveFromEpoll();
-    closeCallBackInConn_(this);
+    if (closeCallBackInConn_ != nullptr) {
+        closeCallBackInConn_(this);
+    }
 }
 
 void Connection::HandleErrorEvent()
 {
     clientChannel_->RemoveFromEpoll();
-    errorCallBackInconn_(this);
+    if (errorCallBackInconn_ != nullptr) {
+        errorCallBackInconn_(this);
+    }
 }
 
 void Connection::HandleWriteEvent()
 {
-    /* 暂时先什么都不做 */
+    int writen = send(Fd(), sendBuf_.data(), sendBuf_.size(), 0);
+    if (writen > 0) {
+        sendBuf_.erase(0, writen);
+    }
+    if (sendBuf_.size() == 0) {
+        clientChannel_->DisableWriting();
+        if (sendFinishCallBackInConn_ != nullptr) {
+            sendFinishCallBackInConn_(this);
+        }
+    }
 }
 
 void Connection::SetNewConnCallBackInConn(function<void(Connection *, string &)> fn)
