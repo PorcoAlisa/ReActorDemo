@@ -5,6 +5,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <iostream>
+using namespace std;
 
 int main(int argc, char *argv[])
 {
@@ -39,8 +41,9 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < 10; i++) {
         memset(buf, 0, sizeof(buf));
-        sprintf(buf, "这是第%d条消息", i);
-        printf("这是第%d条消息\n", i);
+        cin >> buf;
+        // sprintf(buf, "这是第%d条消息", i);
+        // printf("%s\n", buf);
 
         char tmpBuf[1024];
         memset(tmpBuf, 0, sizeof(tmpBuf));
