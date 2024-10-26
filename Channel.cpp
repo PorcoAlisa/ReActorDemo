@@ -93,3 +93,13 @@ void Channel::EnableReading()
     /* 需要在loop_中更新channel */
     loop_->UpdateChannel(this);
 }
+
+void Channel::RemoveFromEpoll()
+{
+    loop_->RemoveChannel(this);
+}
+
+void Channel::UseEt()
+{
+    events_ = events_|EPOLLET; /* 设置使用边缘触发模式 */
+}

@@ -3,6 +3,7 @@
 #include "Socket.h"
 #include "Channel.h"
 #include "EventLoop.h"
+#include "string.h"
 using namespace std;
 
 class Connection
@@ -16,10 +17,24 @@ private:
     EventLoop* loop_;
     unique_ptr<Socket> clientSock_;
     unique_ptr<Channel> clientChannel_;
+    string buf_;
+    function<void(Connection *, string &)> newConnCallBackInConn_; /* 这些地方先暂时用普通指针 */
+    function<void(Connection *)> closeCallBackInConn_;
+    function<void(Connection *)> errorCallBackInconn_;
+    function<void(Connection *)> sendFinishCallBackInConn_;
 
 public:
     Connection(EventLoop *loop, unique_ptr<Socket> clientSock);
     ~Connection();
-    void HandleReadEvent();
     int Fd() const;
+
+    void HandleReadEvent();
+    void HandleCloseEvent();
+    void HandleErrorEvent();
+    void HandleWriteEvent();
+
+    void SetNewConnCallBackInConn(function<void(Connection *, string &)> fn);
+    void SetCloseCallBackInConn(function<void(Connection *)> fn);
+    void SetErrorCallBackInConn(function<void(Connection *)> fn);
+    void SetSendFinishCallBackInConn(function<void(Connection *)> fn);
 };
