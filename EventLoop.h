@@ -24,8 +24,9 @@ private:
     function<void(EventLoop *)> TimeOutCallBack_;
     map<int, shared_ptr<Connection>> conns_;
     mutex mutex_;
+    bool mainLoop_;
 public:
-    EventLoop(int timeout = 80);
+    EventLoop(bool mainLoop, int timeout = 80);
     ~EventLoop();
     void RunLoop();
     void StopLoop();

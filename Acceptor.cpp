@@ -1,4 +1,5 @@
 #include "Acceptor.h"
+#include <sys/syscall.h>
 
 Acceptor::Acceptor(const string &ip, const uint16_t port, EventLoop *loop)
     :servSock_(CreateNonBlocking()), loop_(loop), acceptChannel_(loop_, servSock_.Fd())
@@ -14,11 +15,12 @@ Acceptor::Acceptor(const string &ip, const uint16_t port, EventLoop *loop)
 /* Acceptor的channel只处理新客户端连接的读事件，对其他事件不关心，所以指定读事件处理函数 */
     acceptChannel_.SetReadCallBack(bind(&Acceptor::AcceptNewConn, this));
     acceptChannel_.EnableReading();
+    printf("threadid = %d, Acceptor constructor: ip = %s, port = %d\n", syscall(SYS_gettid), ip.c_str(), port);
 }
 
 Acceptor::~Acceptor()
 {
-
+    printf("threadid = %d, Acceptor destructor\n", syscall(SYS_gettid));
 }
 
 // int Acceptor::Accept(InetAddress &clientAddr)

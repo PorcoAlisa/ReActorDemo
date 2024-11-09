@@ -1,4 +1,5 @@
 #include "Epoll.h"
+#include <sys/syscall.h>
 
 Epoll::Epoll()
 {
@@ -7,11 +8,13 @@ Epoll::Epoll()
         printf("epoll_create() failed(%d).\n", errno);
         exit(-1);
     }
+    printf("threadid = %d, Epoll Constructor: epollFd_ = %d\n", syscall(SYS_gettid), epollFd_);
 }
 
 Epoll::~Epoll()
 {
     close(epollFd_);
+    printf("threadid = %d, Epoll destructor: epollFd_(%d) closed.\n", syscall(SYS_gettid), epollFd_);
 }
 
 void Epoll::UpdateChannel(Channel *ch)

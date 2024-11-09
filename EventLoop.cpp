@@ -1,14 +1,23 @@
 #include "EventLoop.h"
 #include "Connection.h"
+#include <sys/syscall.h>
 
-EventLoop::EventLoop(int timeout):epoll_(new Epoll), stop_(false), timeout_(timeout)
+EventLoop::EventLoop(bool mainLoop, int timeout):epoll_(new Epoll), stop_(false), timeout_(timeout), mainLoop_(mainLoop)
 {
-
+    if (mainLoop_) {
+        printf("threadid = %d, mainLoop constructor: timeout_ = %d\n", syscall(SYS_gettid), timeout_);
+    } else {
+        printf("threadid = %d, slaveLoop constructor: timeout_ = %d\n", syscall(SYS_gettid), timeout_);
+    }
 }
 
 EventLoop::~EventLoop()
 {
-
+    if (mainLoop_) {
+        printf("threadid = %d, mainLoop destructor\n", syscall(SYS_gettid));
+    } else {
+        printf("threadid = %d, slaveLoop destructor\n", syscall(SYS_gettid));
+    }
 }
 
 void EventLoop::RunLoop()
@@ -17,7 +26,11 @@ void EventLoop::RunLoop()
     /* 思考stop需不需用原子类型，首先stop_需要被多个线程操作
     stop操作是通过信号来完成非异常状态下的退出的
     所以stop实际上是由主线程来执行的，而时间循环线程与主线程不一定是同一个线程，这里为了安全，采用原子类型变量 */
-    printf("eventLoop start Run\n");
+    if (mainLoop_) {
+        printf("threadid = %d, mainLoop start runing\n", syscall(SYS_gettid));
+    } else {
+        printf("threadid = %d, slaveLoop start running\n", syscall(SYS_gettid));
+    }
     while (!stop_) {
         vector<Channel *> channels;
         channels = epoll_->EpollWait(timeout_); /* TODO: 这里会发生拷贝，后续考虑优化 */

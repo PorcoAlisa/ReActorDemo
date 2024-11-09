@@ -10,8 +10,8 @@
             "request": "launch",
             "program": "${workspaceRoot}/server",
             "args": [
-                "162.251.95.39",
-                "5085",
+                "10.0.132.2",
+                "39001",
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
@@ -31,7 +31,7 @@
                     "ignoreFailures": true
                 }
             ],
-            // "preLaunchTask": "Build Server"
+            "preLaunchTask": "Build Server"
         }
 
     ]

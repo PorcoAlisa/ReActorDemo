@@ -1,14 +1,15 @@
 #include "Channel.h"
 #include "EventLoop.h"
+#include <sys/syscall.h>
 
 Channel::Channel(EventLoop *loop, int fd):loop_(loop), fd_(fd)
 {
-
+    printf("threadid = %d, Channel constructor: fd_ = %d\n", syscall(SYS_gettid), fd_);
 }
 
 Channel::~Channel()
 {
-    
+    printf("threadid = %d, Channel destructor: fd_ = %d\n", syscall(SYS_gettid), fd_);
 }
 
 bool Channel::InEpoll()

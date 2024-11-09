@@ -1,4 +1,6 @@
 #include "ThreadPool.h"
+#include <sys/syscall.h>
+#include <unistd.h>
 
 /* 消费者 */
 ThreadPool::ThreadPool(size_t threadNum):stop_(false)
@@ -32,6 +34,7 @@ ThreadPool::ThreadPool(size_t threadNum):stop_(false)
             }
         });
     }
+    printf("threadid = %d, ThreadPool constructor: threadpool is runing, threadNum = %d.\n", syscall(SYS_gettid), threadNum);
 }
 
 void ThreadPool::Stop()
@@ -49,6 +52,7 @@ void ThreadPool::Stop()
 ThreadPool::~ThreadPool()
 {
     Stop();
+    printf("threadid = %d, ThreadPool destructor: threadpool has stoped\n", syscall(SYS_gettid));
 }
 
 void ThreadPool::AddTask(function<void()> fn)

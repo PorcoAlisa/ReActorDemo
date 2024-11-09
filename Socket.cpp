@@ -1,4 +1,5 @@
 #include "Socket.h"
+#include <sys/syscall.h>
 
 int CreateNonBlocking()
 {
@@ -8,17 +9,19 @@ int CreateNonBlocking()
         printf("%s:%s:%d listen socket create error:%d\n", __FILE__, __FUNCTION__, __LINE__, errno);
         exit(-1);
     }
+    printf("threadid = %d, create nonblocking socket success!\n", syscall(SYS_gettid));
     return listenFd;
 }
 
 Socket::Socket(int fd):fd_(fd)
 {
-
+    printf("threadid = %d, Socket constructor: fd_ = %d\n", syscall(SYS_gettid), fd_);
 }
 
 Socket::~Socket()
 {
     ::close(fd_);
+    printf("threadid = %d, Socket destructor: fd_(%d) has been closed.\n", syscall(SYS_gettid), fd_);
 }
 
 void Socket::Bind(const InetAddress &servaddr)

@@ -1,22 +1,25 @@
 #include "TcpServer.h"
+#include <sys/syscall.h>
 
 TcpServer::TcpServer(const string& ip, uint16_t port, int timeout, uint32_t threadNum)
-    :timeout_(timeout), threadNum_(threadNum), mainLoop_(timeout_), acceptor_(ip, port, &mainLoop_), threadPool_(threadNum_),
+    :timeout_(timeout), threadNum_(threadNum), mainLoop_(true, timeout_), acceptor_(ip, port, &mainLoop_), threadPool_(threadNum_),
     newConnCallBackInTcpServer_(nullptr)
 {
     mainLoop_.SetTimeOutCallBackFunc(bind(&TcpServer::OnEpollTimeout, this, placeholders::_1));
     acceptor_.SetNewConnCallBack(bind(&TcpServer::AcceptNewConnByTcpServer, this, placeholders::_1));
 
     for (uint32_t i = 0; i < threadNum_; i++) {
-        subLoops_.emplace_back(new EventLoop(timeout_));
+        subLoops_.emplace_back(new EventLoop(false, timeout_));
         subLoops_[i]->SetTimeOutCallBackFunc(bind(&TcpServer::OnEpollTimeout, this, placeholders::_1));
         threadPool_.AddTask(bind(&EventLoop::RunLoop, subLoops_[i].get()));
     }
+    printf("threadid = %d, TcpServer constructor: ip = %s, port = %d, threadNum_ = %d, timeout_ = %d\n",
+        syscall(SYS_gettid), ip.c_str(), port, threadNum_, timeout_);
 }
 
 TcpServer::~TcpServer()
 {
-
+    printf("threadid = %d, TcpServer destructor\n", syscall(SYS_gettid));
 }
 
 void TcpServer::AcceptNewConnByTcpServer(unique_ptr<Socket> clientSock)
