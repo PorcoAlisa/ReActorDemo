@@ -23,19 +23,6 @@ Acceptor::~Acceptor()
     printf("threadid = %d, Acceptor destructor\n", syscall(SYS_gettid));
 }
 
-// int Acceptor::Accept(InetAddress &clientAddr)
-// {
-//     return servSock_.Accept(clientAddr);
-// }
-
-void Acceptor::Read()
-{
-    char buf[1024];
-    ssize_t nread = read(servSock_.Fd(), buf, sizeof(buf));
-
-    printf("%s\n", buf);
-}
-
 /* 与socket中的accept区分开，将accept重命名为acceptnewconn */
 void Acceptor::AcceptNewConn()
 {
@@ -45,6 +32,7 @@ void Acceptor::AcceptNewConn()
     unique_ptr<Socket> clientSock(new Socket(servSock_.Accept(clientAddr)));
     clientSock->SetIpPort(clientAddr.Ip(), clientAddr.Port());
 
+    printf("threadid = %d, Acceptor: new connection, ip = %s, port = %d\n", syscall(SYS_gettid), clientAddr.Ip(), clientAddr.Port());
 /* Acceptor里面只能做到这一步，就是把客户端的socket创建好
 接下来要干嘛，就属于业务需要关心的内容了，决不能放在acceptor里面
 否则acceptor将和业务扯上关系而变得不再通用，业务随时可能变动，到时候acceptor也要随之变动，这不合理*/

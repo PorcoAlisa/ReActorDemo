@@ -29,8 +29,6 @@ private:
 public:
     Acceptor(const string &ip, const uint16_t port, EventLoop *loop);
     ~Acceptor();
-    // int Accept(InetAddress &clientAddr);
-    void Read();
 
 /* 新客户端连接的处理函数，它就是完成Accept的工作 */
     void AcceptNewConn();

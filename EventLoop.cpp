@@ -81,3 +81,11 @@ void EventLoop::AddConnToConns(shared_ptr<Connection>& conn)
     lock_guard<mutex> lg(mutex_);
     conns_[conn->Fd()] = conn;
 }
+
+void EventLoop::RemoveConnFromConns(int fd)
+{
+    lock_guard<mutex> lock(mutex_);
+    printf("threadid = %d, RemoveConnFromConns, start remove conn from conns in eventloop, fd = %d, conns_[fd].use_count() = %d\n",
+        syscall(SYS_gettid) , fd, conns_[fd].use_count());
+    conns_.erase(fd);
+}

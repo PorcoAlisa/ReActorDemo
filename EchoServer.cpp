@@ -1,4 +1,5 @@
 #include "EchoServer.h"
+#include <sys/syscall.h>
 
 EchoServer::EchoServer(const string& ip, uint16_t port, uint32_t threadNum, int timeout):tcpServer_(ip, port, timeout, threadNum)
 {
@@ -33,6 +34,7 @@ void EchoServer::AcceptNewConnInEchoServer(shared_ptr<Connection> conn)
 /* 这里才是真正处理业务的位置 */
 void EchoServer::HandleReadInEchoServer(Connection *conn, string &message)
 {
+    printf("threadid = %d, message: %s\n", syscall(SYS_gettid), message.c_str());
     message = "reply: " + message;
     conn->SendInConn(message.data(), message.size());
 }
@@ -44,7 +46,7 @@ void EchoServer::HandleErrorInEchoServer(Connection *conn)
 
 void EchoServer::HandelCloseInEchoServer(Connection *conn)
 {
-
+    printf("threadid = %d, echoserver does not process close event temporarily.\n", syscall(SYS_gettid));
 }
 
 void EchoServer::HandleSendFinishInEchoServer(Connection *conn)

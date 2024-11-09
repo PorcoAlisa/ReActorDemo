@@ -34,4 +34,5 @@ public:
     void UpdateChannel(Channel *ch);
     void RemoveChannel(Channel *ch);
     void AddConnToConns(shared_ptr<Connection>& conn);
+    void RemoveConnFromConns(int fd);
 };

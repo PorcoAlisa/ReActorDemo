@@ -1,4 +1,5 @@
 #include "Connection.h"
+#include <sys/syscall.h>
 
 /* Channel必须在eventloop中运行，channel类中需要添加eventloop成员变量，标记channel所属的eventloop */
 Connection::Connection(EventLoop *loop, unique_ptr<Socket> clientSock)
@@ -11,12 +12,12 @@ Connection::Connection(EventLoop *loop, unique_ptr<Socket> clientSock)
     /* channel需要提供一个接口，对于客户端连接的channel，使用边缘触发模式 */
     clientChannel_->UseEt();
     clientChannel_->EnableReading();
-
+    printf("threadid = %d, Connection construction: fd = %d\n", syscall(SYS_gettid), clientSock_->Fd());
 }
 
 Connection::~Connection()
 {
-
+    printf("threadid = %d, Connection destruction: fd = %d\n", syscall(SYS_gettid), clientSock_->Fd());
 }
 
 void Connection::HandleReadEvent()
@@ -51,11 +52,11 @@ void Connection::HandleReadEvent()
             break;
         } else if (nread == 0) { /* 客户端连接已断开 */
             /* 处理客户端关闭事件 */
+            printf("threadid = %d, HandleReadEvent nread = 0 shows client has closed. fd = %d\n", syscall(SYS_gettid), clientChannel_->Fd());
             HandleCloseEvent();
             break;
         }
     }
-    
 }
 
 int Connection::Fd() const
@@ -66,7 +67,12 @@ int Connection::Fd() const
 void Connection::HandleCloseEvent()
 {
     /* 客户端关闭，要从事件循环中移除channel */
+    printf("threadid = %d, client closed. fd = %d\n", syscall(SYS_gettid), clientChannel_->Fd());
     clientChannel_->RemoveFromEpoll();
+
+    /* 从事件循环conns_中移除conn */
+    loop_->RemoveConnFromConns(clientChannel_->Fd());
+
     if (closeCallBackInConn_ != nullptr) {
         closeCallBackInConn_(this);
     }

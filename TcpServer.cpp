@@ -72,9 +72,13 @@ void TcpServer::HandleCloseInTcpServer(Connection *conn)
     if (closeCallBackInTcpServer_ != nullptr) {
         closeCallBackInTcpServer_(conn);
     }
+    /* 发现eventloop里面conns_没有移除conn */
     {
+        printf("threadid = %d, Tcpserver HandleCloseInTcpServer: start remove connection from connection pool, conns_[conn->Fd()].use_count() = %d \n",
+            syscall(SYS_gettid), conns_[conn->Fd()].use_count());
         lock_guard<mutex> lg(mutex_);
         conns_.erase(conn->Fd());
+        printf("threadid = %d, Tcpserver HandleCloseInTcpServer: connection has been removed.\n", syscall(SYS_gettid));
     }
 }
 

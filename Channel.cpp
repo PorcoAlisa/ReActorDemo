@@ -42,29 +42,32 @@ void Channel::SetHappenedEvents(uint32_t happenedEvents)
 void Channel::HandleEvents()
 {
     if (happenedEvents_ & EPOLLRDHUP) { /* 说明客户端已关闭连接 */
+        printf("threadid = %d, close event happened\n", syscall(SYS_gettid));
         if(closeCallBack_ != NULL) {
             closeCallBack_();
         } else {
-            printf("Channel::HandleEvents() error closeCallBack_ NULL\n");
+            printf("threadid = %d, Channel::HandleEvents() error closeCallBack_ NULL\n", syscall(SYS_gettid));
         }
     } else if (happenedEvents_ & (EPOLLIN|EPOLLPRI)) { /* 接收缓冲区中有数据可以读 */
+        printf("threadid = %d, read event happened\n", syscall(SYS_gettid));
         if (readCallBack_ != NULL) {
-            printf("readEvent happened\n");
             readCallBack_();
         } else {
-            printf("Channel::HandleEvents() error readCallBack_ NULL\n");
+            printf("threadid = %d, Channel::HandleEvents() error readCallBack_ NULL\n", syscall(SYS_gettid));
         }
     } else if (happenedEvents_ & EPOLLOUT) { /* 有数据需要写 */
+        printf("threadid = %d, write event happened\n", syscall(SYS_gettid));
         if (writeCallBack_ != NULL) {
             writeCallBack_();
         } else {
-            printf("Channel::HandleEvents() error writeCallBack_ NULL\n");
+            printf("threadid = %d, Channel::HandleEvents() error writeCallBack_ NULL\n", syscall(SYS_gettid));
         }
     } else {
+        printf("threadid = %d, error event happened\n", syscall(SYS_gettid));
         if (errorCallBack_ != NULL) {
             errorCallBack_();
         } else {
-            printf("Channel::HandleEvents() error errorCallBack_ NULL\n");
+            printf("threadid = %d, Channel::HandleEvents() error errorCallBack_ NULL\n", syscall(SYS_gettid));
         }
     }
 }
