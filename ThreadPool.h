@@ -18,8 +18,9 @@ private:
     mutex mutex_;
     condition_variable cond_;
     atomic_bool stop_;
+    string type_;
 public:
-    ThreadPool(size_t threadNum);
+    ThreadPool(size_t threadNum, const string& type);
     ~ThreadPool();
     void Stop();
     void AddTask(function<void()> fn);

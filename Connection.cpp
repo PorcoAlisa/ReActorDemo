@@ -93,7 +93,7 @@ void Connection::HandleWriteEvent()
         sendBuf_.erase(0, writen);
     }
     if (sendBuf_.size() == 0) {
-        clientChannel_->DisableWriting();
+        clientChannel_->DisableWriting(); /* 写完了，不需要了，就不再关注读事件了 */
         if (sendFinishCallBackInConn_ != nullptr) {
             sendFinishCallBackInConn_(this);
         }

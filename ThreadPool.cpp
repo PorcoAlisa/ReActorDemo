@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 /* 消费者 */
-ThreadPool::ThreadPool(size_t threadNum):stop_(false)
+ThreadPool::ThreadPool(size_t threadNum, const string& type):stop_(false), type_(type)
 {
     for (size_t i = 0; i < threadNum; i++) {
         threads_.emplace_back([this]{
@@ -34,7 +34,7 @@ ThreadPool::ThreadPool(size_t threadNum):stop_(false)
             }
         });
     }
-    printf("threadid = %d, ThreadPool constructor: threadpool is runing, threadNum = %d.\n", syscall(SYS_gettid), threadNum);
+    printf("threadid = %d, %s ThreadPool constructor: threadpool is runing, threadNum = %d.\n", syscall(SYS_gettid), type_.c_str(), threadNum);
 }
 
 void ThreadPool::Stop()
@@ -67,5 +67,5 @@ void ThreadPool::AddTask(function<void()> fn)
 
 size_t ThreadPool::Size()
 {
-    return taskqueue_.size();
+    return threads_.size(); /* 这里是用来判断到底有没有工作线程的，所以要返回线程池的size */
 }

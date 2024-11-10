@@ -2,7 +2,7 @@
 #include <sys/syscall.h>
 
 TcpServer::TcpServer(const string& ip, uint16_t port, int timeout, uint32_t threadNum)
-    :timeout_(timeout), threadNum_(threadNum), mainLoop_(true, timeout_), acceptor_(ip, port, &mainLoop_), threadPool_(threadNum_),
+    :timeout_(timeout), threadNum_(threadNum), mainLoop_(true, timeout_), acceptor_(ip, port, &mainLoop_), threadPool_(threadNum_, "IO"),
     newConnCallBackInTcpServer_(nullptr)
 {
     mainLoop_.SetTimeOutCallBackFunc(bind(&TcpServer::OnEpollTimeout, this, placeholders::_1));
