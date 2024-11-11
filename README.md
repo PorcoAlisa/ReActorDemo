@@ -1,5 +1,2 @@
 # ReActorDemo
 ReActor Model
-
-token
-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
